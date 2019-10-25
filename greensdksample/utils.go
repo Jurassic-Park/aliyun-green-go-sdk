@@ -1,24 +1,22 @@
 package greensdksample
 
 import (
+	"bytes"
 	"crypto/hmac"
+	"crypto/md5"
 	"crypto/sha1"
 	"encoding/base64"
 	"encoding/json"
 	"net/http"
-	"bytes"
-	"crypto/md5"
 	"time"
 
-	"github.com/aliyun/green-go-sdk/uuid"
+	"github.com/Jurassic-Park/aliyun-green-go-sdk/uuid"
 )
 
 const host string = "http://green.cn-shanghai.aliyuncs.com"
 const method string = "POST"
 const newline string = "\n"
 const MIME string = "application/json"
-
-
 
 func addRequestHeader(requestBody string, req *http.Request, clientInfo string, path string, accessKeyId string, accessKeySecret string) {
 	var now = time.Now().UTC()
@@ -39,7 +37,7 @@ func addRequestHeader(requestBody string, req *http.Request, clientInfo string, 
 	req.Header.Set(acsHeaderKeyArray[1], acsHeaderValueArray[1])
 	req.Header.Set(acsHeaderKeyArray[2], acsHeaderValueArray[2])
 	req.Header.Set(acsHeaderKeyArray[3], acsHeaderValueArray[3])
-	req.Header.Set("Authorization", "acs" + " " + accessKeyId + ":" + singature(acsHeaderKeyArray, acsHeaderValueArray, base64Md5Str, clientInfo, path, accessKeySecret, gmtDate))
+	req.Header.Set("Authorization", "acs"+" "+accessKeyId+":"+singature(acsHeaderKeyArray, acsHeaderValueArray, base64Md5Str, clientInfo, path, accessKeySecret, gmtDate))
 }
 
 func singature(acsHeaderKeyArray []string, acsHeaderValueArray []string, md5Str string, clientInfo string, path string, accessKeySecret string, gmtDate string) string {
@@ -77,7 +75,7 @@ func singature(acsHeaderKeyArray []string, acsHeaderValueArray []string, md5Str 
 	return base64.StdEncoding.EncodeToString(mac.Sum(nil))
 }
 
-func ErrorResult(error error) string{
+func ErrorResult(error error) string {
 	errorResult := make(map[string]string)
 	errorResult["code"] = "500"
 	errorResult["msg"] = error.Error()
